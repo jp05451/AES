@@ -47,6 +47,22 @@ void AES::setKey(unsigned char *key, size_t keyLength = 256)
     }
 }
 
+string AES::encrypt(const string &input)
+{
+    // backup iv
+    unsigned char iv[AES_BLOCK_SIZE];
+    memcpy(iv, &this->iv, AES_BLOCK_SIZE);
+
+    size_t len = input.length();
+    unsigned char *outputBuffer = new unsigned char[len*2];
+    unsigned char *inputBuffer = (unsigned char *)input.c_str();
+
+    AES_cbc_encrypt(inputBuffer, outputBuffer, len, &this->encryptKey, iv, AES_ENCRYPT);
+    string output((char *)outputBuffer);
+    delete[] outputBuffer;
+    return output;
+}
+
 void AES::encrypt(unsigned char *input, unsigned char *output, size_t len)
 {
     unsigned char iv[AES_BLOCK_SIZE];
@@ -59,6 +75,18 @@ void AES::decrypt(unsigned char *input, unsigned char *output, size_t len)
     AES_cbc_encrypt(input, output, len, &this->decryptKey, this->iv, AES_DECRYPT);
 }
 
+string AES::decrypt(const string &input)
+{
+    size_t len = input.length();
+    unsigned char *inputBuffer = (unsigned char *)input.c_str();
+    unsigned char *outputBuffer = new unsigned char[len];
+
+    AES_cbc_encrypt(inputBuffer, outputBuffer, len, &this->decryptKey, this->iv, AES_DECRYPT);
+    string output((char *)outputBuffer);
+    delete[] outputBuffer;
+
+    return output;
+}
 
 void AES::generateIV(unsigned char *iv)
 {
@@ -84,24 +112,30 @@ int main()
     aes.setKey(key, 256);
     aes.setIV(iv);
 
-    cout << "Plaintext: " << plaintext << endl;
+    // cout << "Plaintext: " << plaintext << endl;
 
-    aes.encrypt(plaintext, ciphertext, strlen((const char *)plaintext));
-    cout << "Ciphertext: ";
-    for (int i = 0; i < 98; i++)
-    {
-        for (int j = 7; j >= 0; --j)
-        {
-            printf("%d", (ciphertext[i] >> j) & 1);
-        }
-        printf(" ");
-    }
+    // aes.encrypt(plaintext, ciphertext, strlen((const char *)plaintext));
+    // cout << "Ciphertext: ";
+    // for (int i = 0; i < 98; i++)
+    // {
+    //     for (int j = 7; j >= 0; --j)
+    //     {
+    //         printf("%d", (ciphertext[i] >> j) & 1);
+    //     }
+    //     printf(" ");
+    // }
 
-    cout << endl;
+    // cout << endl;
 
-    memset(iv, 0xff, AES_BLOCK_SIZE); // Reset IV for decryption
-    aes.decrypt(ciphertext, decryptedtext, strlen((const char *)plaintext));
-    cout << "Decrypted text: " << decryptedtext << endl;
+    // memset(iv, 0xff, AES_BLOCK_SIZE); // Reset IV for decryption
+    // aes.decrypt(ciphertext, decryptedtext, strlen((const char *)plaintext));
+    // cout << "Decrypted text: " << decryptedtext << endl;
+    printf("Plaintext: %s\n", plaintext);
+
+    string encrypted = aes.encrypt((const char *)plaintext);
+    cout << "Encrypted: " << encrypted << endl;
+    string decrypted = aes.decrypt(encrypted);
+    cout << "Decrypted: " << decrypted << endl;
 
     return 0;
 }
