@@ -58,8 +58,10 @@ string AES::encrypt(const string &input)
     unsigned char *inputBuffer = (unsigned char *)input.c_str();
 
     AES_cbc_encrypt(inputBuffer, outputBuffer, len, &this->encryptKey, iv, AES_ENCRYPT);
+    
     string output((char *)outputBuffer);
     delete[] outputBuffer;
+
     return output;
 }
 
@@ -98,44 +100,16 @@ void AES::setIV(unsigned char *iv)
     memcpy(this->iv, iv, AES_BLOCK_SIZE);
 }
 
-int main()
+const unsigned char *AES::getIV()
 {
-    unsigned char key[33] = "thisisaverysecurekey123456789012";
-    unsigned char iv[AES_BLOCK_SIZE];
-    memset(iv, 0xff, AES_BLOCK_SIZE);
+    return this->iv;
+}
 
-    unsigned char plaintext[1024] = "Hello, World!!! This is a test message to check the AES encryption and decryption.";
-    unsigned char ciphertext[1024] = {'\0'};
-    unsigned char decryptedtext[1024] = {'\0'};
-
-    AES aes;
-    aes.setKey(key, 256);
-    aes.setIV(iv);
-
-    // cout << "Plaintext: " << plaintext << endl;
-
-    // aes.encrypt(plaintext, ciphertext, strlen((const char *)plaintext));
-    // cout << "Ciphertext: ";
-    // for (int i = 0; i < 98; i++)
-    // {
-    //     for (int j = 7; j >= 0; --j)
-    //     {
-    //         printf("%d", (ciphertext[i] >> j) & 1);
-    //     }
-    //     printf(" ");
-    // }
-
-    // cout << endl;
-
-    // memset(iv, 0xff, AES_BLOCK_SIZE); // Reset IV for decryption
-    // aes.decrypt(ciphertext, decryptedtext, strlen((const char *)plaintext));
-    // cout << "Decrypted text: " << decryptedtext << endl;
-    printf("Plaintext: %s\n", plaintext);
-
-    string encrypted = aes.encrypt((const char *)plaintext);
-    cout << "Encrypted: " << encrypted << endl;
-    string decrypted = aes.decrypt(encrypted);
-    cout << "Decrypted: " << decrypted << endl;
-
-    return 0;
+void AES::dumpIV()
+{
+    for (int i = 0; i < AES_BLOCK_SIZE; i++)
+    {
+        printf("%02x", iv[i]);
+    }
+    printf("\n");
 }

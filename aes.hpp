@@ -20,10 +20,12 @@ public:
     std::string decrypt(const std::string &input);
     void generateIV(unsigned char *iv);
     void setIV(unsigned char *iv);
+    const unsigned char *getIV();
+    void dumpIV();
 
 private:
     AES_KEY encryptKey, decryptKey;
     unsigned char iv[AES_BLOCK_SIZE];
-};;
+};
 
 #endif // AES_HPP
