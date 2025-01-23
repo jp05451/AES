@@ -14,9 +14,8 @@ int main()
     AES aes;
     aes.setKey(key, 256);
 
-    // aes.generateIV(iv);
-    // aes.setIV(iv);
-    // aes.setIV((unsigned char *)"0000000000000000");
+    aes.generateIV(iv);
+    aes.setIV(iv);
     for (int i = 0; i < 10; i++)
     {
         printf("================Iteration %d==============\n", i);
