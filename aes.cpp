@@ -48,6 +48,8 @@ void AES::setKey(unsigned char *key, size_t keyLength = 256)
     }
 }
 
+// ================= encrypt function ===============
+
 string AES::encrypt(const string &input)
 {
     // backup iv
@@ -60,8 +62,8 @@ string AES::encrypt(const string &input)
     unsigned char *inputBuffer = (unsigned char *)input.c_str();
 
     AES_cbc_encrypt(inputBuffer, outputBuffer, len, &this->encryptKey, iv, AES_ENCRYPT);
-    
-    string output((char *)outputBuffer);
+
+    string output(reinterpret_cast<char*>(outputBuffer), outputBufferLen);
     delete[] outputBuffer;
 
     return output;
@@ -73,6 +75,8 @@ void AES::encrypt(unsigned char *input, unsigned char *output, size_t len)
     memcpy(iv, this->iv, AES_BLOCK_SIZE);
     AES_cbc_encrypt(input, output, len, &this->encryptKey, iv, AES_ENCRYPT);
 }
+
+// ================= decrypt function ===============
 
 void AES::decrypt(unsigned char *input, unsigned char *output, size_t len)
 {
@@ -86,11 +90,14 @@ string AES::decrypt(const string &input)
     unsigned char *outputBuffer = new unsigned char[len];
 
     AES_cbc_encrypt(inputBuffer, outputBuffer, len, &this->decryptKey, this->iv, AES_DECRYPT);
-    string output((char *)outputBuffer);
+
+    string output(reinterpret_cast<char *>(outputBuffer), len);
     delete[] outputBuffer;
 
     return output;
 }
+
+// ================= IV functions ===============
 
 void AES::generateIV(unsigned char *iv)
 {
@@ -111,7 +118,7 @@ void AES::dumpIV()
 {
     for (int i = 0; i < AES_BLOCK_SIZE; i++)
     {
-        printf("%02x", iv[i]);
+        printf("%02x ", iv[i]);
     }
     printf("\n");
 }
