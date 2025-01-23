@@ -7,6 +7,7 @@ AES::AES()
 {
     AES_set_encrypt_key(0x00, 128, &this->encryptKey);
     AES_set_decrypt_key(0x00, 128, &this->decryptKey);
+    memset(this->iv, 0xff, AES_BLOCK_SIZE);
 }
 
 AES::~AES()
