@@ -5,7 +5,7 @@ INCLUDE = -I/usr/local/include
 LIBS = -L/usr/local/lib
 
 TARGET = aes
-SRC = aes.cpp
+SRC = aes.cpp main.cpp
 OBJDIR = obj
 OBJ = $(addprefix $(OBJDIR)/, $(SRC:.cpp=.o))
 
@@ -18,4 +18,5 @@ $(OBJDIR)/%.o: %.cpp
 
 clean:
 	rm -f $(OBJ) $(TARGET)
+	rm -rf $(OBJDIR)
 all: $(TARGET)
