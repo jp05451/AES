@@ -1,8 +1,7 @@
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -g3
-LDFLAGS = -lssl -lcrypto
-INCLUDE = -I/usr/local/include
-LIBS = -L/usr/local/lib
+INCLUDE = -I/usr/local/include $(shell pkg-config --cflags openssl)
+LIBS = -L/usr/local/lib $(shell pkg-config --libs openssl)
 
 TARGET = aes
 SRC = aes.cpp main.cpp
