@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++11 -Wall
+CXXFLAGS = -std=c++17 -Wall -g3
 LDFLAGS = -lssl -lcrypto
 INCLUDE = -I/usr/local/include
 LIBS = -L/usr/local/lib
