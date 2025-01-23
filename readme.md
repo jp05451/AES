@@ -6,6 +6,7 @@
 
 - g++
 - OpenSSL
+- pkg-config
 
 ## 編譯
 
