@@ -13,20 +13,34 @@ int main()
 
     AES aes;
     aes.setKey(key, 256);
+
     // aes.generateIV(iv);
     // aes.setIV(iv);
-
-    for (int i = 0; i < 5; i++)
+    // aes.setIV((unsigned char *)"0000000000000000");
+    for (int i = 0; i < 10; i++)
     {
-        cout<<"========== Iteration: "<<i<<" =============="<<endl;
-        cout << "Plaintext: " << plaintext << endl;
+        printf("================Iteration %d==============\n", i);
+        aes.dumpIV();
+        // aes.encrypt(plaintext, ciphertext, strlen((const char *)plaintext));
+        string cypher = aes.encrypt((const char *)plaintext);
+        // aes.decrypt(ciphertext, decryptedtext, strlen((const char *)ciphertext));
+        string decryptedtext = aes.decrypt(cypher);
+        // if(strcmp((const char *)plaintext, (const char *)decryptedtext) != 0)
+        if(strcmp((const char *)plaintext, decryptedtext.c_str()) != 0)
+        {
+            cout << "Plaintext: " << plaintext << endl;
+            cout << "Ciphertext: " << ciphertext << endl;
+            cout << "Decryptedtext: " << decryptedtext << endl;
+        }
+        else
+        {
+            cout << "Success" << endl;
+        }
         aes.dumpIV();
 
-        string encrypted = aes.encrypt((const char *)plaintext);
-        cout << "Encrypted: " << encrypted << endl;
-        string decrypted = aes.decrypt(encrypted);
-        cout << "Decrypted: " << decrypted << endl;
-        aes.dumpIV();
+        // cout << "Plaintext: " << plaintext << endl;
+        // cout << "Ciphertext: " << ciphertext << endl;
+        // cout << "Decryptedtext: " << decryptedtext << endl;
     }
     return 0;
 }
