@@ -52,10 +52,11 @@ string AES::encrypt(const string &input)
 {
     // backup iv
     unsigned char iv[AES_BLOCK_SIZE];
-    memcpy(iv, &this->iv, AES_BLOCK_SIZE);
+    memcpy(iv, this->iv, AES_BLOCK_SIZE);
 
     size_t len = input.length();
-    unsigned char *outputBuffer = new unsigned char[len*2];
+    size_t outputBufferLen = ((len + AES_BLOCK_SIZE) / AES_BLOCK_SIZE) * AES_BLOCK_SIZE;
+    unsigned char *outputBuffer = new unsigned char[outputBufferLen];
     unsigned char *inputBuffer = (unsigned char *)input.c_str();
 
     AES_cbc_encrypt(inputBuffer, outputBuffer, len, &this->encryptKey, iv, AES_ENCRYPT);
@@ -69,7 +70,7 @@ string AES::encrypt(const string &input)
 void AES::encrypt(unsigned char *input, unsigned char *output, size_t len)
 {
     unsigned char iv[AES_BLOCK_SIZE];
-    memcpy(iv, &this->iv, AES_BLOCK_SIZE);
+    memcpy(iv, this->iv, AES_BLOCK_SIZE);
     AES_cbc_encrypt(input, output, len, &this->encryptKey, iv, AES_ENCRYPT);
 }
 
